@@ -10,7 +10,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * added lateinit var
      */
-    lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,32 +25,44 @@ class MainActivity : AppCompatActivity() {
          */
         setContentView(binding.root)
 
-
+        /** Sets onClick event on the calculate button, calls calculateTip Function */
         binding.calculateButton.setOnClickListener { calculateTip() }
     }
 
-    fun calculateTip(){
+    /** calculates the tip */
+    private fun calculateTip(){
+        /** Grabs the text in the costOfService editable field and assigns it to cost as a doubleOrNull */
         val stringInTextField = binding.costOfService.text.toString()
         val cost = stringInTextField.toDoubleOrNull()
+        /** if there is nothing in the costOfService field, the tip will display $0.0 and a message will appear prompting the user to input a number */
         if (cost == null){
-            binding.tipResult.text = ""
+            displayTip(0.0)
             Toast.makeText(this, "Please enter a number", Toast.LENGTH_SHORT).show()
             return
         }
-        val selectedID = binding.tipOptions.checkedRadioButtonId
-        val tipPercentage = when (selectedID) {
+        /** Checks which radioGroup button is checked and assigns percent amount to tipPercentage accordingly */
+        val tipPercentage = when (binding.tipOptions.checkedRadioButtonId) {
             R.id.option_twenty_percent -> 0.20
             R.id.option_eighteen_percent -> 0.18
             else -> 0.15
         }
+        /** Calculates the tip */
         var tip = cost * tipPercentage
-        val roundUp = binding.roundUpSwitch.isChecked
-        if (roundUp) {
+
+        /** Checks if the roundUpSwitch is checked and will apply ceil() to tip if it is checked */
+        if (binding.roundUpSwitch.isChecked) {
             tip = kotlin.math.ceil(tip)
         }
+        /** Displays the tip */
+        displayTip(tip)
+
+    }
+
+    /** Function to display the tip in the TextView
+     * @param tip the tip amount to be formatted and displayed
+     */
+    private fun displayTip(tip : Double){
         val formattedTip = NumberFormat.getCurrencyInstance().format(tip)
-
         binding.tipResult.text = getString(R.string.tip_amount, formattedTip)
-
     }
 }

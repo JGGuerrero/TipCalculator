@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     /** calculates the tip */
     private fun calculateTip(){
         /** Grabs the text in the costOfService editable field and assigns it to cost as a doubleOrNull */
-        val stringInTextField = binding.costOfService.text.toString()
+        val stringInTextField = binding.costOfServiceEditText.text.toString()
         val cost = stringInTextField.toDoubleOrNull()
         /** if there is nothing in the costOfService field, the tip will display $0.0 and a message will appear prompting the user to input a number */
         if (cost == null){
